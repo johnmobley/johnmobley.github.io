@@ -1,18 +1,29 @@
 <html>
   <head>
      <script>
- function copy() {
-  var copyText = document.querySelector("#input");
-  copyText.select();
-  document.execCommand("copy");
-}
+var copyTextareaBtn = document.querySelector('.js-textareacopybtn');
 
-document.querySelector("#copy").addEventListener("click", copy);</script>
+copyTextareaBtn.addEventListener('click', function(event) {
+  var copyTextarea = document.querySelector('.js-copytextarea');
+  copyTextarea.focus();
+  copyTextarea.select();
+
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'successful' : 'unsuccessful';
+    console.log('Copying text command was ' + msg);
+  } catch (err) {
+    console.log('Oops, unable to copy');
+  }
+});   
+    </script>
   </head>
   <body>
 
-<input id="input" type="text"/>
-<button id="copy">Copy</button>
+<p>
+  <button class="js-textareacopybtn" style="vertical-align:top;">Copy Textarea</button>
+  <textarea class="js-copytextarea">Hello I'm some text</textarea>
+</p>
     
     <iframe frameborder="0" width="100%" height="500px" src="https://repl.it/@johnmobley/MediumThunderousEvaluations?lite=true">
     </iframe>
