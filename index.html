@@ -25,9 +25,26 @@ def multi_gets all_text=""
   end
 end
 data = multi_gets
-projects = data.split(/\bSet+\s\d+\:/)
-puts projects
+puts 'Data='
+puts ""
+puts data
+sets = data.split(/\bSet+\s\d+\:/)
+puts ""
+puts 'Sets='
+puts ""
+sets.delete_if{|set| set.length == 0}
+puts "Length of sets array is ="
+puts sets.length
+puts sets
+sets.each do |set|
+    projects = set.split(/\bProject+\s\d+\:/)
+    projects.delete_if{|project| project.length == 0}
+    puts projects.length
+    projects.each do |project|
+    end
+end
 __END__
+    
     </textarea>
     <textarea rows="20" cols="64" class="js-copytextdataarea">
 Set 1:
