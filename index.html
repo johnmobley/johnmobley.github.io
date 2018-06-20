@@ -38,9 +38,24 @@ puts sets.length
 puts sets
 sets.each do |set|
     projects = set.split(/\bProject+\s\d+\:/)
+    puts ""
     projects.delete_if{|project| project.length == 0}
+    puts "Length of projects array is ="
+    projects.shift
     puts projects.length
+    #puts projects
     projects.each do |project|
+      puts ""
+      puts "Length of project array is ="
+      puts project.length
+      #puts project.strip[0,1]
+
+      if project.strip[0,1]=="L"
+        puts "Low Cost City"
+        else
+        puts "High Cost City"
+      end
+
     end
 end
 __END__
