@@ -21,11 +21,12 @@ A full day is reimbursed at a rate of 85 dollars per day in a high cost city.'
 puts 'Input Project Set Data.'
 def multi_gets all_text=""
   while all_text << STDIN.gets
-    return all_text if all_text["\n\n"]
+    return all_text if all_text["__EOF__"]
   end
 end
 data = multi_gets
 puts data
+__END__
     </textarea>
     <textarea rows="20" cols="64" class="js-copytextdataarea">
 Set 1:
@@ -43,7 +44,7 @@ Set 4:
   Project 2: Low Cost City Start Date: 9/1/15 End Date: 9/1/15
   Project 3: High Cost City Start Date: 9/2/15 End Date: 9/2/15
   Project 4: High Cost City Start Date: 9/2/15 End Date: 9/3/15
-EOF
+__EOF__
   </textarea>
     <script>
   
