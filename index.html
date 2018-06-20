@@ -25,41 +25,49 @@ def multi_gets all_text=""
   end
 end
 data = multi_gets
-puts 'Data='
-puts ""
-puts data
+debug = true
+if(debug)
+  puts 'Data='
+
+  puts ""
+  puts data
+end
 sets = data.split(/\bSet+\s\d+\:/)
-puts ""
-puts 'Sets='
-puts ""
 sets.delete_if{|set| set.length == 0}
-puts "Length of sets array is ="
-puts sets.length
-puts sets
+if(debug)
+  puts ""
+  puts 'Sets='
+  puts ""
+  puts "Length of sets array is ="
+  puts sets.length
+  puts sets
+end
 sets.each do |set|
     projects = set.split(/\bProject+\s\d+\:/)
-    puts ""
-    projects.delete_if{|project| project.length == 0}
-    puts "Length of projects array is ="
     projects.shift
-    puts projects.length
-    #puts projects
-    projects.each do |project|
+    if(debug)
       puts ""
-      puts "Length of project array is ="
-      puts project.length
-      #puts project.strip[0,1]
-
-      if project.strip[0,1]=="L"
-        puts "Low Cost City"
-        else
-        puts "High Cost City"
+      puts "Length of projects array is ="
+      puts projects.length
+    end
+    projects.each do |project|
+      if(debug)
+        puts ""
+        puts "Length of project array is ="
+        puts project.length
+        puts "project string ="
+        puts project
+        puts "type of city ="
+        if project.strip[0,1]=="L"
+          puts "Low"
+          else
+          puts "High"
+        end
       end
-
     end
 end
 __END__
-    
+     
     </textarea>
     <textarea rows="20" cols="64" class="js-copytextdataarea">
 Set 1:
