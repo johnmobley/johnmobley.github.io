@@ -25,7 +25,10 @@ def multi_gets all_text=""
   end
 end
 data = multi_gets
-puts data
+projects = data.split(/\bSet+\s\d+\:/)
+puts projects
+__END__
+    
 __END__
     </textarea>
     <textarea rows="20" cols="64" class="js-copytextdataarea">
