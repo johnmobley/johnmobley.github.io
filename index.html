@@ -19,7 +19,12 @@ A travel day is reimbursed at a rate of 55 dollars per day in a high cost city.
 A full day is reimbursed at a rate of 75 dollars per day in a low cost city.
 A full day is reimbursed at a rate of 85 dollars per day in a high cost city.' 
 puts 'Input Project Set Data.'
-data = gets.strip
+def multi_gets all_text=""
+  while all_text << STDIN.gets
+    return all_text if all_text["\n\n"]
+  end
+end
+data = multi_gets
 puts data
     </textarea>
     <textarea rows="20" cols="64" class="js-copytextdataarea">
