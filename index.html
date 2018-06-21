@@ -7,18 +7,6 @@
     <button class="js-textareacopydatabtn" style="vertical-align:top;">Copy Data</button>
     <br/>
     <textarea rows="8" cols="139" class="js-copytextcodearea">
-puts 'You have a set of projects, and you need to calculate a reimbursement amount for the set. Each project has a start date and an end date. The first day of a project and the last day of a project are always "travel" days. Days in the middle of a project are "full" days. There are also two types of cities a project can be in, high cost cities and low cost cities. 
-
-A few rules:
-First day and last day of a project, or sequence of projects, is a travel day.
-Any day in the middle of a project, or sequence of projects, is considered a full day.
-If there is a gap between projects, then the days on either side of that gap are travel days.
-If two projects push up against each other, or overlap, then those days are full days as well.
-Any given day is only ever counted once, even if two projects are on the same day.
-A travel day is reimbursed at a rate of 45 dollars per day in a low cost city.
-A travel day is reimbursed at a rate of 55 dollars per day in a high cost city.
-A full day is reimbursed at a rate of 75 dollars per day in a low cost city.
-A full day is reimbursed at a rate of 85 dollars per day in a high cost city.' 
 puts 'Input Project Set Data >'
 def multi_gets all_text=""
   while all_text << STDIN.gets
@@ -26,148 +14,101 @@ def multi_gets all_text=""
   end
 end
 data = multi_gets
-debug = false
-if(debug)
-  puts 'Data='
-
-  puts ""
-  puts data
-end
 sets = data.split(/\bSet+\s\d+\:/)
 sets.delete_if{|set| set.length == 0}
-if(debug)
-  puts ""
-  puts 'Sets='
-  puts ""
-  puts "Length of sets array is ="
-  puts sets.length
-  puts sets
-end
 intSetCount=1
-reimbursements = Array.new
-reimbursementCount = 0
+reimbursements=Array.new
+reimbursementsCount=0
 sets.each do |set|
     puts "\nSet #{intSetCount}:\n"
     intSetCount += 1
     projects = set.split(/\bProject+\s\d+\:/)
     projects.shift
-    if(debug)
-      puts ""
-      puts "Length of projects array is ="
-      puts projects.length
-    end
     setDaysWorked=Array.new
-    checkForOverlapOrAdjacencyFlag = false
+    setDaysPayType=Array.new
     intProjectCount=1
     projects.each do |project|
-      puts "\nProject #{intProjectCount}:\n"
+      #puts "\nProject #{intProjectCount}:\n"
       intProjectCount += 1
-      #puts "\nValue of setDaysWorked on entering projects each do loop = #{setDaysWorked}"
       startDateDirty=project.split(/\bStart+\s+\bDate+\:/)
       startDate=startDateDirty[1].split(/\bEnd+\s+\bDate+\:/)
       endDate=project.split(/\bEnd+\s+\bDate+\:/)
       startDay=startDate[0].split("/")
       endDay=endDate[1].split("/")
-     
       daysElapsed = endDay[1].to_i-startDay[1].to_i+1
       i=0+setDaysWorked.length
-      if(debug)
-        puts "\nstartDay=#{startDay[1]} endDay=#{endDay[1]} daysElapsed=#{daysElapsed}"
-        puts "Value of i before while loop, should be setDaysWorked.length = #{i}"
-      end
       while(i<endDay[1].to_i)
         intPositionToInsert = i
-        if(debug)
-          puts "value of setDaysWorked upon entering while loop = #{setDaysWorked}"
-          puts "value of i within while loop = #{i}"
-          puts "intPositionToInsert = #{intPositionToInsert}"
-        end
         if(setDaysWorked.last.to_i>=startDay[1].to_i && setDaysWorked.last.to_i!=endDay[1].to_i)
-          #puts "made it to the case where setDaysWorked.last.to_i>=startDay[1].to_i && setDaysWorked.last.to_i<=endDay[1].to_i with those values setDaysWorked.last=#{setDaysWorked.last.to_i} and startDay=#{startDay[1].to_i} and endDay=#{endDay[1].to_i}"
           intValueToInsert = setDaysWorked.last.to_i+1
           else
-            #puts "made it to this edge case"
             if(setDaysWorked.last.to_i==endDay[1].to_i)
               break
               else
-              intValueToInsert = startDay[1].to_i
+                intValueToInsert = startDay[1].to_i
             end
         end
         setDaysWorked.insert(intPositionToInsert,intValueToInsert)
+        setDaysPayType.insert(intPositionToInsert,project.strip[0,1])
         i+=1;
-        if(debug)
-          puts "value to insert = #{intValueToInsert}"
-          puts "setDaysWorked prior to exiting while loop = #{setDaysWorked}"
-          puts "value of i prior to exiting while loop = #{i}"
-        end
-      end
-      if(daysElapsed>2)
-        puts "There was a full day for this project within this set"
-
-        else
-          checkForOverlapOrAdjacencyFlag = true;
-          puts "No full days for this project within this set, check for overlap or adjacency with other projects within this set"
-      end
-      #puts "value of setDaysWorked just prior to exiting projects each do loop = #{setDaysWorked}"
-      print "type of city = "
-      if project.strip[0,1]=="L"
-        print "Low\n"
-        else
-          print "High\n"
-      end
-      if(debug)
-        puts "startDay ="
-        puts startDay[1]
-        puts "endDay ="
-        puts endDay[1]
-        puts ""
-        puts "startDate="
-        puts startDate[0]
-        puts ""
-        puts "endDate="
-        puts endDate[1]
-        puts ""
-        puts ""
-        puts "Length of project array is ="
-        puts project.length
-        puts "project string ="
-        puts project
-        puts "type of city ="
-        if project.strip[0,1]=="L"
-          puts "Low"
-          else
-          puts "High"
-        end
       end
     end
-    puts "\nDays Worked=#{setDaysWorked}"
+    puts "Days Worked=#{setDaysWorked}"
+    puts "Days Worked Pay Type=#{setDaysPayType}"
     j=0
     discontinuityFlag=false
     setDaysWorked.each do |setDayWorked| 
+      boolHighPay=(setDaysPayType[j]=="H")
       j += 1
-      #puts "setDayWorkedInCaseLoop=#{setDayWorked}"
-      #puts "setDaysWorked.first=#{setDaysWorked.first}"
       case setDayWorked
-      when -> (setDayWorked) { setDayWorked==setDaysWorked.first }
-        puts "first day, travel day"
-      when -> (setDayWorked) { setDayWorked==setDaysWorked.last }
-        puts "last day, travel day"
-      when -> (setDayWorked) {setDayWorked.to_i+1!=setDaysWorked[j].to_i}
-        puts "last day before discontinuity, travel day"
+      when -> (setDayWorked) { setDayWorked==setDaysWorked.first && boolHighPay==false }
+        puts "first day, travel day, low pay, $45"
+        reimbursements[reimbursementsCount]=45
+      when -> (setDayWorked) { setDayWorked==setDaysWorked.first && boolHighPay==true }
+        puts "first day, travel day, high pay, $55"
+        reimbursements[reimbursementsCount]=55
+      when -> (setDayWorked) { setDayWorked==setDaysWorked.last && boolHighPay==false }
+        puts "last day, travel day, low pay, $45"
+        reimbursements[reimbursementsCount]=45
+      when -> (setDayWorked) { setDayWorked==setDaysWorked.last && boolHighPay==true }
+        puts "last day, travel day, high pay, $55"
+        reimbursements[reimbursementsCount]=55
+      when -> (setDayWorked) {setDayWorked.to_i+1!=setDaysWorked[j].to_i && boolHighPay==false}
+        puts "last day before discontinuity, travel day, low pay, $45"
         discontinuityFlag=true
-      when -> (setDaysWorked) {setDayWorked.to_i-1!=setDaysWorked[j-1].to_i && discontinuityFlag==true}
-        puts "first day after discontinuity, travel day"
+        reimbursements[reimbursementsCount]=45
+      when -> (setDayWorked) {setDayWorked.to_i+1!=setDaysWorked[j].to_i && boolHighPay==true}
+        puts "last day before discontinuity, travel day, high pay, $55"
+        discontinuityFlag=true
+        reimbursements[reimbursementsCount]=55
+      when -> (setDaysWorked) {setDayWorked.to_i-1!=setDaysWorked[j-1].to_i && discontinuityFlag==true && boolHighPay==false}
+        puts "first day after discontinuity, travel day, low pay, $45"
         discontinuityFlag=false
+        reimbursements[reimbursementsCount]=45
+      when -> (setDaysWorked) {setDayWorked.to_i-1!=setDaysWorked[j-1].to_i && discontinuityFlag==true && boolHighPay==true}
+        puts "first day after discontinuity, travel day, high pay, $55"
+        discontinuityFlag=false
+        reimbursements[reimbursementsCount]=55
       else
-        puts "full day"
+        if(boolHighPay==false)
+          puts "full day, low pay, $75"
+          reimbursements[reimbursementsCount]=75
+          else
+            puts "full day, high pay, $85"
+            reimbursements[reimbursementsCount]=85
+        end
       end
+      reimbursementsCount += 1
     end
-    #puts reimbursements
+    reimbursementsCount = 0
+  puts "reimbursements=#{reimbursements}"
+  puts ""
+  puts "Total Reimbursement For Set #{intSetCount-1} = $#{ reimbursements.inject(0){|sum,x| sum + x }}.00"
+  reimbursements.clear
 end
-#puts reimbursements
 __END__
-  </textarea>
-  <textarea rows="8" cols="64" class="js-copytextdataarea">
+    </textarea>
+    <textarea rows="8" cols="64" class="js-copytextdataarea">
 Set 1:
   Project 1: Low Cost City Start Date: 9/1/15 End Date: 9/3/15
 Set 2:
@@ -184,7 +125,7 @@ Set 4:
   Project 3: High Cost City Start Date: 9/2/15 End Date: 9/2/15
   Project 4: High Cost City Start Date: 9/2/15 End Date: 9/3/15
 __EOF__
-  </textarea>
+    </textarea>
     <script>
   
 var copyTextareaDataBtn = document.querySelector('.js-textareacopydatabtn');
