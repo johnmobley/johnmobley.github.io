@@ -44,6 +44,8 @@ if(debug)
   puts sets
 end
 intSetCount=1
+reimbursements = Array.new
+reimbursementCount = 0
 sets.each do |set|
     puts "\nSet #{intSetCount}:\n"
     intSetCount += 1
@@ -56,34 +58,48 @@ sets.each do |set|
     end
     setDaysWorked=Array.new
     checkForOverlapOrAdjacencyFlag = false
+    intProjectCount=1
     projects.each do |project|
-      puts "\nValue of setDaysWorked on entering projects each do loop = #{setDaysWorked}"
+      puts "\nProject #{intProjectCount}:\n"
+      intProjectCount += 1
+      #puts "\nValue of setDaysWorked on entering projects each do loop = #{setDaysWorked}"
       startDateDirty=project.split(/\bStart+\s+\bDate+\:/)
       startDate=startDateDirty[1].split(/\bEnd+\s+\bDate+\:/)
       endDate=project.split(/\bEnd+\s+\bDate+\:/)
       startDay=startDate[0].split("/")
-      setDaysWorked.push(startDay[1].to_i)
       endDay=endDate[1].split("/")
-      if(startDay[1]!=endDay[1])
-        setDaysWorked.push(endDay[1].to_i)
-      end
+     
       daysElapsed = endDay[1].to_i-startDay[1].to_i+1
-      puts "\nstartDay=#{startDay[1]} endDay=#{endDay[1]} daysElapsed=#{daysElapsed}"
-      i=endDay[1].to_i
-      i -= 1
-      puts "Value of i before while loop, should be endDay-1 = #{i}"
-      while(i>1)
-        puts "value of setDaysWorked upon entering while loop = #{setDaysWorked}"
-        intPositionToInsert =setDaysWorked.last-i+1
-        #stringDay = intDay.to_s
-        #puts "stringDay = #{stringDay}" 
-        puts "value of i within while loop = #{i}"
-        puts "intPositionToInsert = #{intPositionToInsert}"
-        puts "value to insert = #{i}"
-        setDaysWorked.insert(intPositionToInsert,i)
-        puts "setDaysWorked prior to exiting while loop = #{setDaysWorked}"
-        i-=1;
-        puts "value of i prior to exiting while loop = #{i}"
+      i=0+setDaysWorked.length
+      if(debug)
+        puts "\nstartDay=#{startDay[1]} endDay=#{endDay[1]} daysElapsed=#{daysElapsed}"
+        puts "Value of i before while loop, should be setDaysWorked.length = #{i}"
+      end
+      while(i<endDay[1].to_i)
+        intPositionToInsert = i
+        if(debug)
+          puts "value of setDaysWorked upon entering while loop = #{setDaysWorked}"
+          puts "value of i within while loop = #{i}"
+          puts "intPositionToInsert = #{intPositionToInsert}"
+        end
+        if(setDaysWorked.last.to_i>=startDay[1].to_i && setDaysWorked.last.to_i!=endDay[1].to_i)
+          #puts "made it to the case where setDaysWorked.last.to_i>=startDay[1].to_i && setDaysWorked.last.to_i<=endDay[1].to_i with those values setDaysWorked.last=#{setDaysWorked.last.to_i} and startDay=#{startDay[1].to_i} and endDay=#{endDay[1].to_i}"
+          intValueToInsert = setDaysWorked.last.to_i+1
+          else
+            #puts "made it to this edge case"
+            if(setDaysWorked.last.to_i==endDay[1].to_i)
+              break
+              else
+              intValueToInsert = startDay[1].to_i
+            end
+        end
+        setDaysWorked.insert(intPositionToInsert,intValueToInsert)
+        i+=1;
+        if(debug)
+          puts "value to insert = #{intValueToInsert}"
+          puts "setDaysWorked prior to exiting while loop = #{setDaysWorked}"
+          puts "value of i prior to exiting while loop = #{i}"
+        end
       end
       if(daysElapsed>2)
         puts "There was a full day for this project within this set"
@@ -92,7 +108,13 @@ sets.each do |set|
           checkForOverlapOrAdjacencyFlag = true;
           puts "No full days for this project within this set, check for overlap or adjacency with other projects within this set"
       end
-      puts "value of setDaysWorked just prior to exiting projects each do loop = #{setDaysWorked}"
+      #puts "value of setDaysWorked just prior to exiting projects each do loop = #{setDaysWorked}"
+      print "type of city = "
+      if project.strip[0,1]=="L"
+        print "Low\n"
+        else
+          print "High\n"
+      end
       if(debug)
         puts "startDay ="
         puts startDay[1]
@@ -118,10 +140,29 @@ sets.each do |set|
         end
       end
     end
-    puts "\nvalue of setDaysWorked upon exiting set each do=#{setDaysWorked}"
+    puts "\nDays Worked=#{setDaysWorked}"
+    j=0
+    setDaysWorked.each do |setDayWorked| 
+      j += 1
+      if(setDayWorked.to_i!=setDaysWorked[j].to_i)
+      puts "setDayWorked=#{setDayWorked+1} setDaysWorked[j]= #{setDaysWorked[j]} j=#{j}"
+
+        if (setDayWorked==setDaysWorked.first || setDayWorked==setDaysWorked.last)
+            puts "first or last day, travel day"
+            else
+              puts "full day"
+        end
+    #   reimbursements.push(setDayWorked)
+        else
+          puts "made it to this strange case"
+      end
+    end
+    #puts reimbursements
 end
+#puts reimbursements
 __END__
     
+      
   </textarea>
   <textarea rows="8" cols="64" class="js-copytextdataarea">
 Set 1:
