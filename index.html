@@ -142,27 +142,30 @@ sets.each do |set|
     end
     puts "\nDays Worked=#{setDaysWorked}"
     j=0
+    discontinuityFlag=false
     setDaysWorked.each do |setDayWorked| 
       j += 1
-      if(setDayWorked.to_i!=setDaysWorked[j].to_i)
-      puts "setDayWorked=#{setDayWorked+1} setDaysWorked[j]= #{setDaysWorked[j]} j=#{j}"
-
-        if (setDayWorked==setDaysWorked.first || setDayWorked==setDaysWorked.last)
-            puts "first or last day, travel day"
-            else
-              puts "full day"
-        end
-    #   reimbursements.push(setDayWorked)
-        else
-          puts "made it to this strange case"
+      #puts "setDayWorkedInCaseLoop=#{setDayWorked}"
+      #puts "setDaysWorked.first=#{setDaysWorked.first}"
+      case setDayWorked
+      when -> (setDayWorked) { setDayWorked==setDaysWorked.first }
+        puts "first day, travel day"
+      when -> (setDayWorked) { setDayWorked==setDaysWorked.last }
+        puts "last day, travel day"
+      when -> (setDayWorked) {setDayWorked.to_i+1!=setDaysWorked[j].to_i}
+        puts "last day before discontinuity, travel day"
+        discontinuityFlag=true
+      when -> (setDaysWorked) {setDayWorked.to_i-1!=setDaysWorked[j-1].to_i && discontinuityFlag==true}
+        puts "first day after discontinuity, travel day"
+        discontinuityFlag=false
+      else
+        puts "full day"
       end
     end
     #puts reimbursements
 end
 #puts reimbursements
 __END__
-    
-      
   </textarea>
   <textarea rows="8" cols="64" class="js-copytextdataarea">
 Set 1:
