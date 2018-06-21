@@ -2,9 +2,9 @@
   <head>
   </head>
   <body>
+    <iframe frameborder="0" width="100%" height="600px" src="https://repl.it/@johnmobley/MediumThunderousEvaluations?lite=true"></iframe>
     <button class="js-textareacopycodebtn" style="vertical-align:top;">Copy Code</button>
     <button class="js-textareacopydatabtn" style="vertical-align:top;">Copy Data</button>
-    <iframe frameborder="0" width="100%" height="480px" src="https://repl.it/@johnmobley/MediumThunderousEvaluations?lite=true"></iframe>
     <textarea rows="20" cols="139" class="js-copytextcodearea">
 puts 'You have a set of projects, and you need to calculate a reimbursement amount for the set. Each project has a start date and an end date. The first day of a project and the last day of a project are always "travel" days. Days in the middle of a project are "full" days. There are also two types of cities a project can be in, high cost cities and low cost cities. 
 
@@ -18,14 +18,14 @@ A travel day is reimbursed at a rate of 45 dollars per day in a low cost city.
 A travel day is reimbursed at a rate of 55 dollars per day in a high cost city.
 A full day is reimbursed at a rate of 75 dollars per day in a low cost city.
 A full day is reimbursed at a rate of 85 dollars per day in a high cost city.' 
-puts 'Input Project Set Data.'
+puts 'Input Project Set Data >'
 def multi_gets all_text=""
   while all_text << STDIN.gets
     return all_text if all_text["__EOF__"]
   end
 end
 data = multi_gets
-debug = true
+debug = false
 if(debug)
   puts 'Data='
 
@@ -50,8 +50,36 @@ sets.each do |set|
       puts "Length of projects array is ="
       puts projects.length
     end
+    setDaysWorked=Array.new
     projects.each do |project|
+      startDateDirty=project.split(/\bStart+\s+\bDate+\:/)
+      startDate=startDateDirty[1].split(/\bEnd+\s+\bDate+\:/)
+      endDate=project.split(/\bEnd+\s+\bDate+\:/)
+      startDay=startDate[0].split("/")
+      endDay=endDate[1].split("/")
+      daysElapsed = endDay[1].to_i-startDay[1].to_i
+      puts "daysElapsed ="
+      puts daysElapsed
+      if(endDay[1].to_i-startDay[1].to_i>=1)
+        puts "There was a full day"
+        i = endDay[1].to_i-startDay[1].to_i
+        while(i>0)
+          setDaysWorked.unshift(i)
+          i -= 1
+        end
+      end
       if(debug)
+        puts "startDay ="
+        puts startDay[1]
+        puts "endDay ="
+        puts endDay[1]
+        puts ""
+        puts "startDate="
+        puts startDate[0]
+        puts ""
+        puts "endDate="
+        puts endDate[1]
+        puts ""
         puts ""
         puts "Length of project array is ="
         puts project.length
@@ -65,27 +93,13 @@ sets.each do |set|
         end
       end
     end
+    puts ""
+    puts "setDaysWorked= "
+    puts setDaysWorked
+    puts ""
 end
 __END__
-     
-    </textarea>
-    <textarea rows="20" cols="64" class="js-copytextdataarea">
-Set 1:
-  Project 1: Low Cost City Start Date: 9/1/15 End Date: 9/3/15
-Set 2:
-  Project 1: Low Cost City Start Date: 9/1/15 End Date: 9/1/15
-  Project 2: High Cost City Start Date: 9/2/15 End Date: 9/6/15
-  Project 3: Low Cost City Start Date: 9/6/15 End Date: 9/8/15
-Set 3:
-  Project 1: Low Cost City Start Date: 9/1/15 End Date: 9/3/15
-  Project 2: High Cost City Start Date: 9/5/15 End Date: 9/7/15
-  Project 3: High Cost City Start Date: 9/8/15 End Date: 9/8/15
-Set 4:
-  Project 1: Low Cost City Start Date: 9/1/15 End Date: 9/1/15
-  Project 2: Low Cost City Start Date: 9/1/15 End Date: 9/1/15
-  Project 3: High Cost City Start Date: 9/2/15 End Date: 9/2/15
-  Project 4: High Cost City Start Date: 9/2/15 End Date: 9/3/15
-__EOF__
+    
   </textarea>
     <script>
   
